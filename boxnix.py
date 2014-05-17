@@ -10,7 +10,5 @@ def main():
         sys.exit()
     TOKEN = sys.argv[1]
 
-    folder_list = folders.Folders(TOKEN) 
-
 if __name__ == '__main__':
     main()
