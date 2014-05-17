@@ -14,18 +14,22 @@ Getting started:
 >>> f = Folders('<bearer token>')
 ```
 
-This gives you a Folders object that holds information about your Box account. Other available methods include `f.path()`, `f.list_contents()`, `f.up()`, and `f.down('<file or folder name>')`:
+This gives you a Folders object that holds information about your Box account. Other available methods include:
+* `f.path()` Prints the current path, starting from All Files in your Box account
+* `f.list()` Lists contents of your current folder
+* `f.up()` Goes up one level
+* `f.down('<file or folder name>')` Goes down one folder or downloads a file
 
 ```python
 >>> f.path()
 All Files/
->>> f.list_contents()
+>>> f.list()
 foo, folder
 bar, folder
 simon.txt, file
 garfunkel.txt, file
 >>> f.down('foo')
->>> f.list_contents()
+>>> f.list()
 hall.txt, file
 oates.txt, file
 >>> f.path()

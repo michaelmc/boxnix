@@ -15,7 +15,7 @@ class Folders:
             s += folder.get('name') + '/'
         print s
 
-    def list_contents(self):
+    def list(self):
         for entry in self.current_folder.get('item_collection').get('entries'):
             item_type = entry.get('type')
             if (item_type == 'folder' or item_type == 'file'):
