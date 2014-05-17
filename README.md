@@ -32,3 +32,10 @@ All Files/foo/
 All Files/
 >>> f.down('garfunkel.txt') # downloads the file to the current folder
 ```
+
+Future development
+------------------
+In the short term, features planned for boxnix include: 
+*a robustly-featured UI for end-user command line use, with autocomplete
+*uploading and versioning abilities
+*password authentication and secure storage of bearer tokens
