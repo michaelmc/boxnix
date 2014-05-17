@@ -5,6 +5,9 @@ A Python command line client for Box.
 
 boxnix is still in the *very* early stages of development. Functionality is limited right now to the Folders class, which allows you, using an OAuth 2.0 or Box developer bearer token, to create Folders objects, traverse folders in Box, and download files.
 
+Using boxnix
+------------
+
 Getting started:
 ```python
 >>> from folders import Folders
