@@ -54,3 +54,19 @@ class Folders:
         else:
             self.folders.pop(-1)
             current_folder = self.folders[-1]
+
+    def upload(self, filename):
+        parent_id = self.current_folder.get('id')
+        item_id = None
+        for entry in self.current_folder.get('item_collection').get('entries'):
+            if (entry.get('name') == filename and entry.get('type') == 'file'):
+                item_id = entry.get('id')
+                break
+        if (item_id == None):
+            f = requests.post('https://upload.box.com/api/2.0/files/content', headers = { 'Authorization': 'Bearer ' + self.token }, files = { 'filename': '@' + filename, 'parent_id':parent_id })
+        else:
+            f = requests.post('https://upload.box.com/api/2.0/files/' + item_id + '/content', headers = { 'Authorization': 'Bearer ' + self.token }, files = { 'filename': '@' + filename })
+        print f.status_code
+        if (f.status_code != 200):
+            print "Problem uploading file"
+            return None
