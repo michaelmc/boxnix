@@ -19,6 +19,7 @@ This gives you a Folders object that holds information about your Box account. O
 * `f.list()` Lists contents of your current folder
 * `f.up()` Goes up one level
 * `f.down('<file or folder name>')` Goes down one folder or downloads a file
+* `f.upload('<filename>')` Uploads a file to the current folder. If the file already exists (matched by name), a new version is uploaded
 
 ```python
 >>> f.path()
@@ -38,6 +39,7 @@ All Files/foo/
 >>> f.path()
 All Files/
 >>> f.down('garfunkel.txt') # downloads the file to the current folder
+>>> f.upload('crosby.txt')
 ```
 
 Future development
