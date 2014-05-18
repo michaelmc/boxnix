@@ -8,7 +8,7 @@ def main():
         print "usage: boxnix.py <flags> <token> <Box file or location> <local file or location>"
         sys.exit()
     flags = sys.argv[1]
-    folder = Folders(sys.argv[2]    
+    folder = Folders(sys.argv[2])
     box = sys.argv[3]
     local = sys.argv[4]
 
