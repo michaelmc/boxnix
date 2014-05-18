@@ -13,10 +13,8 @@ class Folders:
         self.folders = []
         f = requests.get('https://api.box.com/2.0/folders/0/', 
             headers = { 'Authorization': 'Bearer ' + token })
-        if (f.status_code != 200): return None
         self.folders.append(f.json())
         self.current_folder = self.folders[-1]
-        return True
 
     def path(self):
         """
@@ -127,6 +125,33 @@ class Folders:
             print "Requested item not a file or folder"
             return False
 
+    def download(self, target, filename, destination=None):
+        """
+        Downloads a specified file by Box ID. The destination to which the file is downloaded is an
+        optional argument.
+
+        Returns True if the specified file or folder is reached, False
+        otherwise.
+        """
+        f = requests.get('https://api.box.com/2.0/files/' + target + '/content/',
+            headers = { 'Authorization': 'Bearer ' + self.token })
+        if (f.status_code != 200): 
+            print "File couldn't be downloaded"
+            return False
+        try:
+            if (destination == None):
+                output = open(filename, 'w')
+            elif (destination.endswith('/')):
+                output = open(destination + filename, 'w')
+            else:
+                output = open(destination, 'w')
+            output.write(bytearray(f.content))
+            output.close()
+            return True
+        except IOError:
+            print "File couldn't be saved"
+            return False
+    
     def up(self):
         """
         Moves current folder up one level from present.
@@ -169,3 +194,22 @@ class Folders:
         else:
             print "File uploaded"
             return True
+
+    def search(self, target):
+        """
+        """
+        f = requests.get('https://api.box.com/2.0/search', params = { 'query': target, 'scope': 'user_content', 'type': 'file', 'limit': 200, 'offset': 0 }, headers = { 'Authorization': 'Bearer ' + self.token })
+        if (f.status_code != 200):
+            print "Error in search"
+            return None 
+        elif (f.json().get('total_count') > 0):
+            files = []
+            for item in f.json().get('entries'):
+                path = '/'
+                for parent in item.get('path_collection').get('entries'):
+                    path += parent.get('name') + '/'
+                files.append((item.get('id'), item.get('name'), path))
+            return files
+        else:
+            print "Item not found"
+            return None 
