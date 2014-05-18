@@ -1,4 +1,6 @@
-from folders import Folders
+#!/usr/bin/python
+
+from boxfolders import Folders
 import sys
 
 TOKEN = ''

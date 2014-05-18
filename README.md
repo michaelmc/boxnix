@@ -22,12 +22,12 @@ You can use an OAuth 2.0 token or a Box developer token.
 
 ***There really is NO error handling, and minimal error checking, at this point, so use with caution and probably not on anything you care about.***
 
-Using folders.py
+Using boxfolders.py
 ----------------
 
 Getting started:
 ```python
->>> from folders import Folders
+>>> from boxfolders import Folders
 >>> f = Folders('<bearer token>')
 ```
 
