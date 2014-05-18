@@ -197,6 +197,12 @@ class Folders:
 
     def search(self, target):
         """
+        Searches a user's Box account for a file based on a query string; 
+        search looks both in filenames and in file contents and gets the 
+        first 200 matching values. 
+
+        Returns matching files as a list of tuples containing file ID, 
+        filename, and Box path.
         """
         f = requests.get('https://api.box.com/2.0/search', params = { 'query': target, 'scope': 'user_content', 'type': 'file', 'limit': 200, 'offset': 0 }, headers = { 'Authorization': 'Bearer ' + self.token })
         if (f.status_code != 200):
