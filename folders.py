@@ -13,7 +13,7 @@ class Folders:
         s = ''
         for folder in self.folders:
             s += folder.get('name') + '/'
-        print s
+        return s
 
     def traverse(self, path, local=None):
         path = path.split('/')
@@ -27,11 +27,15 @@ class Folders:
         for item in path:
             if (item != path[-1] and self.item_type(item) == 'file'):
                 print 'Invalid path: file "' + item + '" found'
+                return False
             elif (item != ''):
                 if local == None:
                     self.down(item)
                 else:
                     self.down(item, local)
+                return True
+            else:
+                return False
 
     def item_type(self, item):
         for entry in self.current_folder.get('item_collection').get('entries'):
@@ -40,10 +44,13 @@ class Folders:
         return None
 
     def list(self):
+        item_dict = {}
         for entry in self.current_folder.get('item_collection').get('entries'):
             item_type = entry.get('type')
             if (item_type == 'folder' or item_type == 'file'):
                 print entry.get('name') + ", " + item_type
+                item_dict[entry.get('name')] = (entry.get('id'), item_type)
+        return item_dict
 
     def down(self, child, destination=None):
         item_id = None
@@ -54,20 +61,20 @@ class Folders:
                 break
         if (item_id == None):
             print 'Requested item not found'
-            return None
+            return False
 
         if (item_type == 'folder'):
             f = requests.get('https://api.box.com/2.0/folders/' + item_id + '/', headers = { 'Authorization': 'Bearer ' + self.token })
             if (f.status_code != 200): 
                 print "Folder couldn't be opened"
-                return None
+                return False
             self.folders.append(f.json())
             self.current_folder = self.folders[-1]
         elif (item_type == 'file'):
             f = requests.get('https://api.box.com/2.0/files/' + item_id + '/content/', headers = { 'Authorization': 'Bearer ' + self.token })
             if (f.status_code != 200): 
                 print "File couldn't be opened"
-                return None
+                return False
             try:
                 if (destination == None):
                     output = open(child, 'w')
@@ -77,17 +84,22 @@ class Folders:
                     output = open(destination, 'w')
                 output.write(bytearray(f.content))
                 output.close()
+                return True
             except IOError:
                 print "File couldn't be saved"
+                return False
         else:
             print "Requested item not a file or folder"
+            return False
 
     def up(self):
         if (self.current_folder == self.folders[0]):
             print "Already at All Files"
+            return False
         else:
             self.folders.pop(-1)
             current_folder = self.folders[-1]
+            return True
 
     def upload(self, filename):
         parent_id = self.current_folder.get('id')
@@ -102,9 +114,10 @@ class Folders:
             f = requests.post('https://upload.box.com/api/2.0/files/' + item_id + '/content', headers = { 'Authorization': 'Bearer ' + self.token }, data = { 'filename': filename }, files = { filename: open(filename, 'rb')})
         if (f.status_code == 409):
             print "File upload caused a conflict"
-            return None
+            return False
         elif (f.status_code != 201):
             print "Problem uploading the file"
-            return None
+            return False
         else:
             print "File uploaded"
+            return True
