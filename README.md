@@ -15,8 +15,9 @@ Using boxnix.py
 Valid flags are:
 * `u` Specifies upload from a local file to a remote location
 * `d` Specifies download from a Box file to a local location
+* `s` Specifies search of files on Box, allows user to choose from search results, and downloads to a local location.
 
-You can only use one of `u` or `d` at the same time. 
+You can only use one of `u`, `d`, or `s` at the same time. 
 
 You can use an OAuth 2.0 token or a Box developer token.
 
@@ -35,8 +36,10 @@ This gives you a Folders object that holds information about your Box account. O
 * `f.path()` Prints the current path, starting from All Files in your Box account
 * `f.list()` Lists contents of your current folder
 * `f.up()` Goes up one level
-* `f.down('<file or folder name>')` Goes down one folder or downloads a file
-* `f.upload('<filename>')` Uploads a file to the current folder. If the file already exists (matched by name), a new version is uploaded
+* `f.down(<file or folder name>, <destination (optional)>)` Goes down one folder or downloads a file
+* `f.upload(<filename>)` Uploads a file to the current folder. If the file already exists (matched by name), a new version is uploaded
+* `f.download(<file id>, <filename>, <destination (optional)>` Downloads a file specified by Box ID to a specified filename in a specified destination
+* `f.search(<search string>)` Searches for a file based on a query string (searches both file names and contents) and returns a list of matching file ids, names, and paths
 
 ```python
 >>> f.path()
@@ -62,6 +65,5 @@ All Files/
 Future development
 ------------------
 In the short term, features planned for boxnix include: 
-* A robustly-featured UI for end-user command line use, with autocomplete
-* Uploading and versioning abilities
+* A more-robustly-featured UI for end-user command line use
 * Password authentication and secure storage of bearer tokens
