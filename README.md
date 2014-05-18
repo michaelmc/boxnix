@@ -3,10 +3,27 @@ boxnix
 
 A Python command line client for Box.
 
-boxnix is still in the *very* early stages of development. Functionality is limited right now to the Folders class, which allows you, using an OAuth 2.0 or Box developer bearer token, to create Folders objects, traverse folders in Box, and download files.
+boxnix is still in the *very* early stages of development. Functionality is limited right now to:
 
-Using boxnix
-------------
+* boxnix.py provides a simple command line tool that uploads or downloads a single file to or from Box.
+* The Folders class, which allows you, using an OAuth 2.0 or Box developer bearer token, to create Folders objects, traverse folders in Box, and upload and download files.
+
+Using boxnix.py
+---------------
+`python boxnix.py <flags> <token> <Box file or location> <local file or location>`
+
+Valid flags are:
+* `u` Specifies upload from a local file to a remote location
+* `d` Specifies download from a Box file to a local location
+
+You can only use one of `u` or `d` at the same time. 
+
+You can use an OAuth 2.0 token or a Box developer token.
+
+***There really is NO error handling, and minimal error checking, at this point, so use with caution and probably not on anything you care about.***
+
+Using folders.py
+----------------
 
 Getting started:
 ```python

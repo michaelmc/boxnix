@@ -15,13 +15,37 @@ class Folders:
             s += folder.get('name') + '/'
         print s
 
+    def traverse(self, path, local=None):
+        path = path.split('/')
+        if (path[0] == ''):
+            self.folders = [self.folders[0]]
+            self.current_folder = self.folders[0] 
+        if (path[1] == 'All Files'):
+            path = path[2:]
+        else:
+            path = path[1:]
+        for item in path:
+            if (item != path[-1] and self.item_type(item) == 'file'):
+                print 'Invalid path: file "' + item + '" found'
+            elif (item != ''):
+                if local == None:
+                    self.down(item)
+                else:
+                    self.down(item, local)
+
+    def item_type(self, item):
+        for entry in self.current_folder.get('item_collection').get('entries'):
+            if (entry.get('name') == item):
+                return entry.get('type')
+        return None
+
     def list(self):
         for entry in self.current_folder.get('item_collection').get('entries'):
             item_type = entry.get('type')
             if (item_type == 'folder' or item_type == 'file'):
                 print entry.get('name') + ", " + item_type
 
-    def down(self, child):
+    def down(self, child, destination=None):
         item_id = None
         for entry in self.current_folder.get('item_collection').get('entries'):
             if (entry.get('name') == child):
@@ -44,9 +68,19 @@ class Folders:
             if (f.status_code != 200): 
                 print "File couldn't be opened"
                 return None
-            output = open(child, 'w')
-            output.write(bytearray(f.content))
-            output.close()
+            try:
+                if (destination == None):
+                    output = open(child, 'w')
+                elif (destination.endswith('/')):
+                    output = open(destination + child, 'w')
+                else:
+                    output = open(destination, 'w')
+                output.write(bytearray(f.content))
+                output.close()
+            except IOError:
+                print "File couldn't be saved"
+        else:
+            print "Requested item not a file or folder"
 
     def up(self):
         if (self.current_folder == self.folders[0]):
@@ -66,10 +100,11 @@ class Folders:
             f = requests.post('https://upload.box.com/api/2.0/files/content', headers = { 'Authorization': 'Bearer ' + self.token }, data = { 'filename': filename, 'parent_id':parent_id }, files = { filename: open(filename, 'rb')})
         else:
             f = requests.post('https://upload.box.com/api/2.0/files/' + item_id + '/content', headers = { 'Authorization': 'Bearer ' + self.token }, data = { 'filename': filename }, files = { filename: open(filename, 'rb')})
-        print f.status_code
         if (f.status_code == 409):
             print "File upload caused a conflict"
             return None
         elif (f.status_code != 201):
             print "Problem uploading the file"
             return None
+        else:
+            print "File uploaded"
