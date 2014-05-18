@@ -63,10 +63,13 @@ class Folders:
                 item_id = entry.get('id')
                 break
         if (item_id == None):
-            f = requests.post('https://upload.box.com/api/2.0/files/content', headers = { 'Authorization': 'Bearer ' + self.token }, files = { 'filename': '@' + filename, 'parent_id':parent_id })
+            f = requests.post('https://upload.box.com/api/2.0/files/content', headers = { 'Authorization': 'Bearer ' + self.token }, data = { 'filename': filename, 'parent_id':parent_id }, files = { filename: open(filename, 'rb')})
         else:
-            f = requests.post('https://upload.box.com/api/2.0/files/' + item_id + '/content', headers = { 'Authorization': 'Bearer ' + self.token }, files = { 'filename': '@' + filename })
+            f = requests.post('https://upload.box.com/api/2.0/files/' + item_id + '/content', headers = { 'Authorization': 'Bearer ' + self.token }, data = { 'filename': filename }, files = { filename: open(filename, 'rb')})
         print f.status_code
-        if (f.status_code != 200):
-            print "Problem uploading file"
+        if (f.status_code == 409):
+            print "File upload caused a conflict"
+            return None
+        elif (f.status_code != 201):
+            print "Problem uploading the file"
             return None
