@@ -10,14 +10,21 @@ boxnix is still in the *very* early stages of development. Functionality is limi
 
 Using boxnix.py
 ---------------
-`python boxnix.py <flags> <token> <Box file or location> <local file or location>`
+`Usage:
+  boxnix.py (-u|-d [-s]) <token> <box_location> [<local_location>]
+
+Options:
+  -h --help     Show this screen.
+  --version     Show version.
+  -u            Upload
+  -d            Download
+  -s            Search`
+
 
 Valid flags are:
 * `u` Specifies upload from a local file to a remote location
 * `d` Specifies download from a Box file to a local location
 * `s` Specifies search of files on Box, allows user to choose from search results, and downloads to a local location.
-
-You can only use one of `u`, `d`, or `s` at the same time. 
 
 You can use an OAuth 2.0 token or a Box developer token.
 
