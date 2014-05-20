@@ -15,23 +15,18 @@ Options:
 """
 from docopt import docopt
 from boxfolders import Folders
-import sys
-
-TOKEN = ''
 
 def main(arguments):
+    if not arguments.get('<local_location>'):
+        arguments['<local_location>'] = './'
     if arguments.get('-u'):
-        print 'up'
-        #folder.traverse(box)
-        #return folder.upload(local)    
+        folder.traverse(arguments.get('<box_location>')
+        return folder.upload(arguments.get('<local_location>')    
     elif arguments.get('-d') and not arguments.get('-s'):
-        print 'down'
-        #return folder.traverse(box, local)
+        return folder.traverse(arguments.get('<box_location>'), arguments.get('<local_location'>))
     elif arguments.get('-s'):
-        print 'search'
-        results = folder.search(box)
-        print "Enter the number of the file to download. n goes to the 
-            next page, b goes back, q quits."
+        results = folder.search(argments.get('<box_location>')
+        print "Enter the number of the file to download. n goes to the next page, b goes back, q quits."
         i = 0
         while True:
             for j in range(0, 15):
@@ -50,8 +45,7 @@ def main(arguments):
             elif (typing == 'q'):
                 return None
     else:
-        print 'Use the u, d, or s flag to upload, download, or search 
-            respectively'
+        print 'Use the u, d, or s flag to upload, download, or search respectively'
         return None
 
 if __name__ == '__main__':
