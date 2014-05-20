@@ -10,7 +10,8 @@ boxnix is still in the *very* early stages of development. Functionality is limi
 
 Using boxnix.py
 ---------------
-`Usage:
+```
+Usage:
   boxnix.py (-u|-d [-s]) <token> <box_location> [<local_location>]
 
 Options:
@@ -18,8 +19,8 @@ Options:
   --version     Show version.
   -u            Upload
   -d            Download
-  -s            Search`
-
+  -s            Search
+```
 
 Valid flags are:
 * `u` Specifies upload from a local file to a remote location
