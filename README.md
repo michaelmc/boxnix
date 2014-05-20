@@ -70,6 +70,11 @@ All Files/
 >>> f.upload('crosby.txt')
 ```
 
+Requirements
+------------
+
+Boxnix uses the terrific [docopt](https://github.com/docopt/docopt "docopt on Github").
+
 Future development
 ------------------
 In the short term, features planned for boxnix include: 
