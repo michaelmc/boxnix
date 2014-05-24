@@ -95,15 +95,16 @@ class Folders:
             print 'Requested item not found'
             return False
         if (item_type == 'folder'):
-            f = requests.get('https://api.box.com/2.0/folders/' + item_id + '/',
-                headers = { 'Authorization': 'Bearer ' + self.token })
+            f = requests.get('https://api.box.com/2.0/folders/' + item_id + 
+                '/', headers = { 'Authorization': 'Bearer ' + self.token })
             if (f.status_code != 200): 
                 print "Folder couldn't be opened"
                 return False
             self.folders.append(f.json())
             self.current_folder = self.folders[-1]
         elif (item_type == 'file'):
-            f = requests.get('https://api.box.com/2.0/files/' + item_id + '/content/',
+            f = requests.get('https://api.box.com/2.0/files/' + 
+                item_id + '/content/',
                 headers = { 'Authorization': 'Bearer ' + self.token })
             if (f.status_code != 200): 
                 print "File couldn't be opened"
@@ -127,14 +128,14 @@ class Folders:
 
     def download(self, target, filename, destination=None):
         """
-        Downloads a specified file by Box ID. The destination to which the file is downloaded is an
-        optional argument.
+        Downloads a specified file by Box ID. The destination to which 
+        the file is downloaded is an optional argument.
 
         Returns True if the specified file or folder is reached, False
         otherwise.
         """
-        f = requests.get('https://api.box.com/2.0/files/' + target + '/content/',
-            headers = { 'Authorization': 'Bearer ' + self.token })
+        f = requests.get('https://api.box.com/2.0/files/' + target + 
+            '/content/', headers = { 'Authorization': 'Bearer ' + self.token })
         if (f.status_code != 200): 
             print "File couldn't be downloaded"
             return False
@@ -182,9 +183,15 @@ class Folders:
                 item_id = entry.get('id')
                 break
         if (item_id == None):
-            f = requests.post('https://upload.box.com/api/2.0/files/content', headers = { 'Authorization': 'Bearer ' + self.token }, data = { 'filename': filename, 'parent_id':parent_id }, files = { filename: open(path, 'rb')})
+            f = requests.post('https://upload.box.com/api/2.0/files/content', 
+                headers = { 'Authorization': 'Bearer ' + self.token }, 
+                data = { 'filename': filename, 'parent_id':parent_id }, 
+                files = { filename: open(path, 'rb')})
         else:
-            f = requests.post('https://upload.box.com/api/2.0/files/' + item_id + '/content', headers = { 'Authorization': 'Bearer ' + self.token }, data = { 'filename': filename }, files = { filename: open(path, 'rb')})
+            f = requests.post('https://upload.box.com/api/2.0/files/' + 
+                item_id + '/content', headers = { 'Authorization': 'Bearer ' + 
+                self.token }, data = { 'filename': filename }, files = { 
+                filename: open(path, 'rb')})
         if (f.status_code == 409):
             print "File upload caused a conflict"
             return False
@@ -195,7 +202,7 @@ class Folders:
             print "File uploaded"
             return True
 
-    def search(self, target):
+    def search(self, target, scope=None, offset=0):
         """
         Searches a user's Box account for a file based on a query string; 
         search looks both in filenames and in file contents and gets the 
@@ -204,7 +211,12 @@ class Folders:
         Returns matching files as a list of tuples containing file ID, 
         filename, and Box path.
         """
-        f = requests.get('https://api.box.com/2.0/search', params = { 'query': target, 'scope': 'user_content', 'type': 'file', 'limit': 200, 'offset': 0 }, headers = { 'Authorization': 'Bearer ' + self.token })
+        if not scope:
+            scope = 'name'
+        f = requests.get('https://api.box.com/2.0/search', params = { 'query': 
+            target, 'scope': 'user_content', 'content_types': scope, 
+            'type': 'file', 'limit': 15, 'offset': 0 }, headers = { 
+            'Authorization': 'Bearer ' + self.token })
         if (f.status_code != 200):
             print "Error in search"
             return None 
